@@ -9,8 +9,10 @@ import os
 import re
 
 
-app = Flask(__name__, static_folder='../frontend', template_folder='../frontend')
-CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})  # Enable CORS for all routes
+app = Flask(__name__)
+
+# Allow specific frontend origin (Netlify) 
+CORS(app, resources={r"/api/*": {"origins": ["https://rsmth-demo.netlify.app"]}})
 
 HF_API_URL = 'https://api-inference.huggingface.co/models/Qwen/QwQ-32B-Preview'
 # HF_API_TOKEN = os.getenv('HF_API_TOKEN')  # Key to be picked up with environment variables
