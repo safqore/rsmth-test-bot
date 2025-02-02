@@ -59,8 +59,14 @@ def debug():
 def query_handler():
     try:
         # Retrieve user ID and session ID from headers or generate new ones
-        user_id = request.headers.get("X-User-ID", str(uuid.uuid4()))
-        session_id = request.headers.get("X-Session-ID", str(uuid.uuid4()))
+        user_id = request.headers.get("X-User-ID")
+        if user_id in [None, 'null']:
+            user_id = str(uuid.uuid4())
+
+        session_id = request.headers.get("X-Session-ID")
+        if session_id in [None, 'null']:
+            session_id = str(uuid.uuid4())
+
         print(f"[DEBUG]: user_id: {user_id} \n session_id: {session_id}")
 
         # Extract user query from the JSON payload
@@ -133,6 +139,8 @@ def query_handler():
             llm_reply = "The generated response was flagged as inappropriate. Please try again."
 
         return jsonify({
+            "user_id": user_id,
+            "session_id": session_id,
             "query": user_query,
             "answer": llm_reply,
             "context": relevant_chunks,
